@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.example.ybmt.jun.bash</groupId>
+	<artifactId>bash-workspaces</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>${project.artifactId}</name>
+	<description>bash workspaces on docker</description>
+	<packaging>pom</packaging>
+
+        <modules>
+                <module>amazonlinux2-bash-workspace</module>
+                <module>alpinelinux-bash-workspace</module>
+		<module>debian-bash-workspace</module>
+		<module>almalinux-bash-workspace</module>
+		<module>redhat-ubi8-bash-workspace</module>
+        </modules>
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<filtering>true</filtering>
+			</testResource>
+		</testResources>
+
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>3.2.0</version>
+				</plugin>
+                                <plugin>
+                                        <groupId>org.apache.maven.plugins</groupId>
+                                        <artifactId>maven-assembly-plugin</artifactId>
+                                        <version>3.3.0</version>
+                                </plugin>
+                                <plugin>
+                                        <groupId>org.apache.maven.plugins</groupId>
+                                        <artifactId>maven-antrun-plugin</artifactId>
+                                        <version>1.8</version>
+                                </plugin>
+				<plugin>
+                                	<groupId>com.dkanejs.maven.plugins</groupId>
+                                	<artifactId>docker-compose-maven-plugin</artifactId>
+					<version>4.0.0</version>
+                                	<configuration>
+                                        	<composeFile>${project.build.outputDirectory}/docker-compose.yaml</composeFile>
+                                        	<envVars>
+                                        	        <IMAGE_NAME>${project.artifactId}:${project.version}</IMAGE_NAME>
+                                        	</envVars>
+                                	</configuration>
+                               		<executions>
+                                        	<execution>
+                                        	        <id>docker-build</id>
+                                        	        <phase>validate</phase>
+                                        	        <goals>
+                                        	                <goal>build</goal>
+                                        	        </goals>
+                                        	        <configuration>
+                                        	                <buildArgs>
+                                        	                        <noCache>true</noCache>
+                                        	                        <!--<alwaysPull>true</alwaysPull>-->
+                                        	                </buildArgs>
+                                        	        </configuration>
+                                        	</execution>
+                                	</executions>
+                        	</plugin>
+			</plugins>
+		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					 <execution>
+						<id>resource-filtering</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>resources</goal>
+						</goals>
+					 </execution>
+				</executions>
+			  </plugin>
+		</plugins>
+	</build>
+
+</project>
